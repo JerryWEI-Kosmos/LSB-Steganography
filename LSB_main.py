@@ -100,14 +100,14 @@ def plus(string):
 def GetCryptograph(carrier,keys):
     carrier = carrier.crop(keys[0],keys[1],keys[0]+keys[4],keys[0]+keys[3])
     if keys[2]==-1:
-
+        exit()
     else:
         cryptographString = ""
         for i in range(keys[3]):
             for j in range(keys[4]):
                 cryptographString =cryptographString+ ""+str(carrier[i][j]%2)
         cryptograph = toBit()
-        cryptographImage = Image.fromarray()
+        cryptographImage = Image.fromarray(cryptograph)
 
 # 性能计算
 # 计算峰值信息量

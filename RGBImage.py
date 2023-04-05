@@ -4,59 +4,65 @@ import re
 import numpy as np
 from PIL import Image
 
+
 # 格式化bin()函数处理后的ascii码
 def plus(string):
     return string.zfill(8)
 
+
 # 将RGB图像转换为01矩阵
-def ImageToBit(img):
-    height,width,channel = img.shape
+def image_to_bit(img):
+    height, width, channel = img.shape
     string = ""
-    for c in range(channel-1):
+    for c in range(channel - 1):
         for i in range(height):
             for j in range(width):
-                string = string + "" + plus(bin(img[i][j][c]).replace('0b',''))
-    list = re.findall(r'.{1}',string)
-    listLen = len(list)
-    width = width*8
+                string = string + "" + plus(bin(img[i][j][c]).replace('0b', ''))
+    zero_one_list = re.findall(r'.1', string)
+    width = width * 8
     # 初始化bit矩阵
-    bitArray = np.zeros((height, width,channel))
+    bit_array = np.zeros((height, width, channel))
     n = 0
     # 将列表中的bit按位写入矩阵
-    for c in range(channel-1):
+    for c in range(channel - 1):
         for i in range(height):
             for j in range(width):
-                bitArray[i][j][c] = int(list[n])
+                bit_array[i][j][c] = int(zero_one_list[n])
                 n = n + 1
-    return bitArray
+    return bit_array
+
 
 # 选择密文图像
-def OpenImage():
+def open_image():
     # 打开相对路径下的密文文件夹
-    Path = ".\data\cryptographs\images\\"
-    ImageList = os.listdir(Path)
+    path = "./data/cryptograph/images/"
+    image_list = os.listdir(path)
     print("密文文件下有如下内容：(打开为nArray)")
     n = 1
-    for ImagePath in ImageList:
-        Img = Image.open(".\data\cryptographs\images\\"+ImagePath)
-        # 将密文转换为Tensor
-        ImgTensor = np.array(Img)
+    for image_path in image_list:
+        img = Image.open(path + image_path)
+        # 将密文转换为nArray
+        img_array = np.array(img)
         # 获取密文图像的通道数、高度、宽度
-        H , W , C= ImgTensor.shape
-        print("{}.文件名：{} 高：{} 宽：{} 通道：{}".format(n,ImagePath,H,W,C))
+        h, w, c = img_array.shape
+        print("{}.文件名：{} 高：{} 宽：{} 通道：{}".format(n, image_path, h, w, c))
         n = n + 1
-    print("选择需要打开的密文（退出选择输入0）")
-    while 1==1:
+    print("选择需要打开的密文（退出输入0）")
+    while 1 == 1:
         num = int(input("请输入密文编号:"))
         if num == 0:
             print("已退出选择")
             break
         # 判断输入是否合法
-        elif num in range(1,len(ImageList)+1):
-            CryptographsImage = Image.open(Path+ImageList[num-1])
-            CryptographsImage = CryptographsImage.convert("RGB")
-            CryptographsArray = ImageToBit(np.array(CryptographsImage))
-            print("选择图像为:{}".format(ImageList[num-1]))
-            return CryptographsArray
+        elif num in range(1, len(image_list) + 1):
+            cryptograph_image = Image.open(path + image_list[num - 1])
+            cryptograph_image = cryptograph_image.convert("RGB")
+            cryptograph_array = image_to_bit(np.array(cryptograph_image))
+            print("选择图像为:{}".format(image_list[num - 1]))
+            return cryptograph_array
         else:
             print("输入编号超出范围！")
+
+# 解密RGB密文
+def decode_image(cryptograph_array):
+    return 0

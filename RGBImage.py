@@ -14,17 +14,17 @@ def plus(string):
 def image_to_bit(img):
     height, width, channel = img.shape
     string = ""
-    for c in range(channel - 1):
+    for c in range(channel):
         for i in range(height):
             for j in range(width):
                 string = string + "" + plus(bin(img[i][j][c]).replace('0b', ''))
-    zero_one_list = re.findall(r'.1', string)
+    zero_one_list = re.findall(r'.{1}', string)
     width = width * 8
     # 初始化bit矩阵
     bit_array = np.zeros((height, width, channel))
     n = 0
     # 将列表中的bit按位写入矩阵
-    for c in range(channel - 1):
+    for c in range(channel):
         for i in range(height):
             for j in range(width):
                 bit_array[i][j][c] = int(zero_one_list[n])
@@ -63,6 +63,25 @@ def open_image():
         else:
             print("输入编号超出范围！")
 
+
 # 解密RGB密文
-def decode_image(cryptograph_array):
-    return 0
+def decode_image(carrier_array):
+    h, w, c = carrier_array.shape
+    decode_cryptograph = np.zeros((h, int(w / 8), 3))
+
+    # 将加密信息从截取的隐写区域中读出成字符串
+    cryptograph_string = ""
+    for index in range(c):
+        for i in range(h):
+            for j in range(w):
+                cryptograph_string = cryptograph_string + "" + str(carrier_array[i][j][index] % 2)
+    ciphertext_list = re.findall(r'.{8}', cryptograph_string)
+    # 将字符串还原成矩阵
+    n = 0
+    for index in range(c):
+        for j in range(h):
+            for i in range(int(w / 8)):
+                decode_cryptograph[i][j][index] = int(ciphertext_list[n], 2)
+                n = n + 1
+    cryptograph_image = Image.fromarray(np.uint8(decode_cryptograph))
+    return cryptograph_image

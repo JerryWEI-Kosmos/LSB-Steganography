@@ -48,18 +48,21 @@ def plus(string):
 # 提取密文
 def get_cryptograph(carrier, keys):
     # 裁剪出隐写区域
-    carrier = carrier.crop((keys[0], keys[1], keys[0] + keys[4], keys[0] + keys[3]))
+    carrier = carrier.crop((keys[0], keys[1], keys[0] + keys[4], keys[1] + keys[3]))
     # 将裁剪出的隐写区域转换为nArray
     carrier_array = np.array(carrier)
-    if keys[5] == 2:
+    print(carrier_array.shape)
+    # 对二值图进行解密
+    if keys[5] == 1:
+        index = keys[2]
+        cryptograph = decode_binary_image(carrier_array, index)
+    # 对RGB图像进行解密
+    elif keys[5] == 2:
         cryptograph = decode_image(carrier_array)
-
+    # 对文本进行解密
     elif keys[5] == 3:
         index = keys[2]
         cryptograph = decode_txt(carrier_array,index)
-    elif keys[5] == 1:
-        index = keys[2]
-        cryptograph = decode_binary_image(carrier_array)
 
     return cryptograph
 
@@ -98,10 +101,9 @@ if __name__ == '__main__':
     cImg = steganography(carrier, cryptograph, keys)
     cImg = Image.fromarray(cImg)
     carrier = Image.fromarray(carrier)
-    cImg.show()
 
     PSNR = psnr(cImg, carrier)
     print("峰值信噪比 PSNR=%.1f dB" % PSNR)
 
     newcryptograph = get_cryptograph(cImg, keys)
-    print(newcryptograph)
+    newcryptograph.show()

@@ -43,11 +43,12 @@ def open_binary_image():
 # 将密文二值图转换成正常可读的二值图
 def decode_binary_image(cryptograph_array,index):
     h, w, c = cryptograph_array.shape
+    decode_cryptograph = np.zeros((h,w))
     for j in range(h):
         for i in range(w):
-            if cryptograph_array[i][j] == 0:
-                continue
+            if cryptograph_array[i][j][index] % 2 == 0:
+                decode_cryptograph[i][j] = 0
             else:
-                cryptograph_array[i][j] = 255
-    cryptograph_image = Image.fromarray(cryptograph_array)
+                decode_cryptograph[i][j] = 255
+    cryptograph_image = Image.fromarray(decode_cryptograph)
     return cryptograph_image

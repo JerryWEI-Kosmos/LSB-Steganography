@@ -5,7 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Pytorch" />
       <excludeFolder url="file://$MODULE_DIR$/PyCharm" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.10 (LSB-Steganography)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (LSB-Steganography)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

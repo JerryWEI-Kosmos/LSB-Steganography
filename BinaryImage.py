@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from PIL import Image
+from scramble import *
 
 
 # 选择密文图像 返回一个nArray对象
@@ -29,26 +30,19 @@ def open_binary_image():
             # 打开选中的图像
             cryptograph_image = Image.open(path + image_list[num - 1])
             # 将图像转换为二值矩阵
-            cryptograph_array = np.array(cryptograph_image.convert("1"))
+            cryptograph_image = cryptograph_image.convert("1")
+            # # 将图片进行logistic置乱
+            # cryptograph_image = logistic_binary_img(cryptograph_image)
+            cryptograph_array = np.array(cryptograph_image)
             # 获取当前图像的高宽信息
             h, w = cryptograph_array.shape
             # 将nArray格式化为高、宽、通道格式
             cryptograph_array = np.reshape(cryptograph_array, (h, w, 1))
             print("选择图像为:{}".format(image_list[num - 1]))
+            # 返回经过logistic变换的图
             return cryptograph_array
         else:
             print("输入编号超出范围！")
 
 
-# 将密文二值图转换成正常可读的二值图
-def decode_binary_image(cryptograph_array,index):
-    h, w, c = cryptograph_array.shape
-    decode_cryptograph = np.zeros((h,w))
-    for j in range(h):
-        for i in range(w):
-            if cryptograph_array[i][j][index] % 2 == 0:
-                decode_cryptograph[i][j] = 0
-            else:
-                decode_cryptograph[i][j] = 255
-    cryptograph_image = Image.fromarray(decode_cryptograph)
-    return cryptograph_image
+

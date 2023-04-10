@@ -11,30 +11,30 @@ def plus(string):
     return string.zfill(8)
 
 
-# 将RGB图像转换为01矩阵
+# 将灰度图转换为01矩阵
 def image_to_bit(img):
-    height, width, channel = img.shape
+    height, width = img.shape
     string = ""
-    for c in range(channel):
-        for i in range(height):
-            for j in range(width):
-                string = string + "" + plus(bin(img[i][j][c]).replace('0b', ''))
+    for i in range(height):
+        for j in range(width):
+            string = string + "" + plus(bin(img[i][j]).replace('0b', ''))
     zero_one_list = re.findall(r'.{1}', string)
     width = width * 8
     # 初始化bit矩阵
-    bit_array = np.zeros((height, width, channel))
+    bit_array = np.zeros((height, width))
     n = 0
     # 将列表中的bit按位写入矩阵
-    for c in range(channel):
-        for i in range(height):
-            for j in range(width):
-                bit_array[i][j][c] = int(zero_one_list[n])
-                n = n + 1
+    for i in range(height):
+        for j in range(width):
+            bit_array[i][j] = int(zero_one_list[n])
+            n = n + 1
+    # 格式化矩阵
+    bit_array = bit_array.reshape((height,width,1))
     return bit_array
 
 
 # 选择密文图像
-def open_image():
+def open_Grayimage():
     # 打开相对路径下的密文文件夹
     path = "./data/cryptograph/images/"
     image_list = os.listdir(path)
@@ -57,14 +57,12 @@ def open_image():
         # 判断输入是否合法
         elif num in range(1, len(image_list) + 1):
             cryptograph_image = Image.open(path + image_list[num - 1])
-            cryptograph_image = cryptograph_image.convert("RGB")
+            cryptograph_image = cryptograph_image.convert("L")
             # 将RGB图片进行logistic加密
-            cryptograph_image = logistic_img(cryptograph_image)
+            cryptograph_image = logistic_Gray_img(cryptograph_image)
             # cryptograph_image.show()
             cryptograph_array = image_to_bit(np.array(cryptograph_image))
             print("选择图像为:{}".format(image_list[num - 1]))
             return cryptograph_array
         else:
             print("输入编号超出范围！")
-
-

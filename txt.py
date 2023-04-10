@@ -36,20 +36,6 @@ def to_bit_array(ciphertext):
     return bit_array
 
 
-# 将提取出的密文转换位可读密文信息
-def decode_txt(carrier_array,index):
-    h, w, c = carrier_array.shape
-    cryptograph_string = ""
-    for i in range(h):
-        for j in range(w):
-            cryptograph_string = cryptograph_string + "" + str(carrier_array[i][j][index] % 2)
-    cryptograph = ""
-    ciphertext_list = re.findall(r'.{8}', cryptograph_string)
-    for i in range(len(ciphertext_list)):
-        cryptograph = cryptograph + "" + str(chr(int(ciphertext_list[i], 2)))
-    return cryptograph
-
-
 # 打开文本密文 输出一个nArray对象
 def open_txt():
     # 打开相对路径下的密文文件夹

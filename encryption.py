@@ -56,14 +56,28 @@ def steganography(carrier, cryptograph, keys):
         for c in range(2):
             for i in range(keys[3]):
                 for j in range(keys[4]):
-                    carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
-                        cryptograph[i][j][c])
+                    # carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
+                    #     cryptograph[i][j][c])
+                    if carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
+                        continue
+                    else:
+                        carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
+                            cryptograph[i][j][c])
     else:
         x = keys[0]
         y = keys[1]
         c = keys[2]
-        for i in range(keys[3]):
-            for j in range(keys[4]):
-                result = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(cryptograph[i][j])
-                carrier[i + y][j + x][c] = result
+        if keys[5] == 1 or keys[5] == 4:
+            for i in range(keys[3]):
+                for j in range(keys[4]):
+                    result = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(cryptograph[i][j])
+                    carrier[i + y][j + x][c] = result
+        elif keys[5] == 3:
+            for i in range(keys[3]):
+                for j in range(keys[4]):
+                    if carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
+                        continue
+                    else:
+                        carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
+                            cryptograph[i][j][c])
     return carrier

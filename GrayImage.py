@@ -61,6 +61,7 @@ def open_Grayimage():
             # 将RGB图片进行logistic加密
             cryptograph_image = logistic_Gray_img(cryptograph_image)
             # cryptograph_image.show()
+            # cryptograph_image.show()
             cryptograph_array = image_to_bit(np.array(cryptograph_image))
             print("选择图像为:{}".format(image_list[num - 1]))
             return cryptograph_array

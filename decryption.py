@@ -111,7 +111,7 @@ def decryption(carrier, keys):
         # 裁剪出隐写区域
         carrier = carrier.crop((keys[0], keys[1], keys[0] + keys[4], keys[1] + keys[3]))
     except TypeError:
-        print("当前图像受到了裁剪攻击或压缩攻击，暂时无法解密！")
+        print("当前图像受到了裁剪攻击或压缩攻击，密文完整性受到破坏，暂时无法解密！")
     # 将裁剪出的隐写区域转换为nArray
     carrier_array = np.array(carrier)
     # 对二值图进行解密

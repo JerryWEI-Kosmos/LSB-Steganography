@@ -3,6 +3,7 @@ from encryption import *
 from decryption import *
 from GrayImage import *
 from RGBImage import *
+from attack import *
 from PIL import Image
 from txt import *
 import numpy as np
@@ -14,7 +15,7 @@ import os
 def open_carrier():
     path = "./data/carriers/"
     carrier_list = os.listdir(path)
-    print("载体文件如下：(打开为nArray)")
+    print("可选择的载体图像如下：(打开为nArray)")
     for i in range(0, len(carrier_list)):
         width = Image.open(path + carrier_list[i]).width
         height = Image.open(path + carrier_list[i]).height
@@ -41,20 +42,14 @@ def open_carrier():
 # 性能计算
 # 计算峰值信息量
 def psnr(img_1, img_2):
+    # 将要计算的图像打开成nArray矩阵
     img_1int = np.array(img_1)
     img_2int = np.array(img_2)
-    # h,w,c = img_1int.shape
-    # s = 0
-    # for index in range(c):
-    #     for i in range(h):
-    #         for j in range(c):
-    #             s = s +(img_1int[i][j][index]/1.0 - img_2int[i][j][index]/1.0)**2
-    # mse = s/(h*w)
-    mse = np.mean((img_1int / 1.0 - img_2int / 1.0) ** 2)
-    if mse<0:
-        mse = 0 - mse
+    # 计算差错平均值
+    mse = np.mean((img_2int / 1.0 - img_1int / 1.0) ** 2)
     if mse < 1.0e-10:
         return 100
+    # 返回峰值信噪比
     return 10 * math.log10(255.0 ** 2 / mse)
 
 
@@ -76,23 +71,55 @@ def open_cryptograph():
 
 
 if __name__ == '__main__':
+    # 选择测试模式
+    print("选择测试模式")
+    print("1. 正常隐写与提取\n2. 模拟攻击")
+    num = int(input("选择测试模式："))
+    # 打开载体图像
     carrier = open_carrier()
+    # 打开密文图像
     cryptograph, flag = open_cryptograph()
+    # 生成随机密钥
     keys = creat_key(carrier, cryptograph, flag)
     print("\n密钥为：{}".format(keys))
-    # 输出编码后的密钥
-    print("编码后的密钥：{}".format(encode_key(keys)))
+    # 进行LSB隐写
     cImg = steganography(carrier, cryptograph, keys)
+    # 将隐写前后的图像从矩阵还原并输出载体图像和隐写后的载体图像
     cImg = Image.fromarray(cImg)
+    cImg.show()
     carrier = Image.fromarray(carrier)
-
+    carrier.show()
+    # 计算隐写性能
     PSNR = psnr(cImg,carrier)
     print("峰值信噪比 PSNR=%.1f dB" % PSNR)
+    if num == 1:
+        # 从载体图像中提取密文
+        newcryptograph = decryption(cImg, keys)
+        # 识别隐写类型并输出提取后的密文
+        if keys[5]==4:
+            print(newcryptograph)
+        else:
+            newcryptograph.show()
+    elif num == 2:
+        print("可选择的攻击模式：\n1.椒盐噪声攻击\n2.旋转攻击")
+        number = int(input("请选择攻击模式："))
+        if number == 1:
+            # 添加椒盐噪声
+            print("1. 添加椒盐噪声，可选比例如下:\n0.9 0.7 0.5 0.3")
+            snr = float(input(("请选择椒盐噪声的比例：")))
+            attack_img = add_salt_pepper(np.array(cImg),snr)
+            attack_img = Image.fromarray(attack_img)
+            attack_img.show()
+        elif number == 2:
+            # 旋转攻击
+            print("将图像矩阵转置后提取密文")
+            attack_img = cImg.transpose(Image.ROTATE_180)
+            attack_img.show()
 
-    newcryptograph = decryption(cImg, keys)
-    if keys[5]==4:
-        print(newcryptograph)
-    else:
-        newcryptograph.show()
-
-
+        # 被攻击的载体解密
+        newcryptograph = decryption(attack_img, keys)
+        # 识别隐写类型并输出提取后的密文
+        if keys[5] == 4:
+            print(newcryptograph)
+        else:
+            newcryptograph.show()

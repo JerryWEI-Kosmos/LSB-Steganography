@@ -70,6 +70,18 @@ def open_cryptograph():
         exit()
 
 
+# 选择是否保存照片
+def save(img):
+    path = "./data/saveImage/"
+    while 1==1:
+        flag = input("是否需要保存当前隐写图像？(yes/no):")
+        if flag in ["yes","y","Y","YES"]:
+            img.save(path+"saveImages.jpg")
+            break
+        elif flag in ["no",'n',"No","NO"]:
+            print("程序结束...")
+            exit()
+
 if __name__ == '__main__':
     # 选择测试模式
     print("选择测试模式")
@@ -94,6 +106,8 @@ if __name__ == '__main__':
     # 将隐写前后的图像从矩阵还原并输出载体图像和隐写后的载体图像
     cImg = Image.fromarray(cImg)
     cImg.show()
+    # 选择是否保存图片
+    save(cImg)
     carrier = Image.fromarray(carrier)
     carrier.show()
     # 计算隐写性能

@@ -3,6 +3,10 @@ import re
 import numpy as np
 
 
+# 匹配
+word_list = list("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=:.,?")
+
+
 # 格式化bin()函数处理后的ascii码
 def plus(string):
     return string.zfill(8)
@@ -62,7 +66,7 @@ def open_txt():
             for word in txt.read():
                 word = word.strip("\n")
                 ciphertext_list.append(word)
-            ciphertext = "".join(word for word in ciphertext_list if word.isalnum())
+            ciphertext = "".join(word for word in ciphertext_list if (word in word_list))
             ciphertext = list(ciphertext)
             txt_array = to_bit_array(ciphertext)
             n, m = txt_array.shape

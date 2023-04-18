@@ -62,8 +62,8 @@ def open_cryptograph():
         return open_binary_image(), 1
     elif num == 2:
         return open_image(), 2
-    elif num ==3:
-        return open_Grayimage(),3
+    elif num == 3:
+        return open_Grayimage(), 3
     elif num == 4:
         return open_txt(), 4
     elif num == 0:
@@ -73,8 +73,15 @@ def open_cryptograph():
 if __name__ == '__main__':
     # 选择测试模式
     print("选择测试模式")
-    print("1. 正常隐写与提取\n2. 模拟攻击")
-    num = int(input("选择测试模式："))
+    while 1 == 1:
+        print("1.正常隐写与提取\n2.模拟攻击\n0.退出程序")
+        num = int(input("选择测试模式："))
+        if num > 2:
+            print("选择超出范围！请重新选择")
+        elif num == 0:
+            print("退出程序...")
+            exit()
+        break
     # 打开载体图像
     carrier = open_carrier()
     # 打开密文图像
@@ -90,24 +97,35 @@ if __name__ == '__main__':
     carrier = Image.fromarray(carrier)
     carrier.show()
     # 计算隐写性能
-    PSNR = psnr(cImg,carrier)
+    PSNR = psnr(cImg, carrier)
     print("峰值信噪比 PSNR=%.1f dB" % PSNR)
     if num == 1:
         # 从载体图像中提取密文
         newcryptograph = decryption(cImg, keys)
         # 识别隐写类型并输出提取后的密文
-        if keys[5]==4:
+        if keys[5] == 4:
             print(newcryptograph)
         else:
             newcryptograph.show()
     elif num == 2:
-        print("可选择的攻击模式：\n1.椒盐噪声攻击\n2.旋转攻击")
-        number = int(input("请选择攻击模式："))
+        print("可选择的攻击模式：\n1.椒盐噪声攻击\n2.旋转攻击\n0.退出程序")
+        while 1 == 1:
+            number = int(input("请选择攻击模式："))
+            if number > 2:
+                print("选择超出范围！请重新选择...")
+            elif number == 0:
+                print("程序退出...")
+                exit()
         if number == 1:
             # 添加椒盐噪声
             print("1. 添加椒盐噪声，可选比例如下:\n0.9 0.7 0.5 0.3")
-            snr = float(input(("请选择椒盐噪声的比例：")))
-            attack_img = add_salt_pepper(np.array(cImg),snr)
+            while 1 == 1:
+                snr = float(input(("请选择椒盐噪声的比例：")))
+                if snr > 0.9 or snr < 0.3:
+                    print("输入非法！请重新输入")
+                else:
+                    break
+            attack_img = add_salt_pepper(np.array(cImg), snr)
             attack_img = Image.fromarray(attack_img)
             attack_img.show()
         elif number == 2:

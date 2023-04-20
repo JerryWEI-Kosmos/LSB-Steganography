@@ -1,6 +1,4 @@
 import os
-import numpy as np
-from PIL import Image
 from scramble import *
 
 
@@ -43,6 +41,3 @@ def open_binary_image():
             return cryptograph_array
         else:
             print("输入编号超出范围！")
-
-
-

@@ -1,8 +1,5 @@
 import os
 import re
-
-import numpy as np
-from PIL import Image
 from scramble import *
 
 
@@ -34,7 +31,7 @@ def image_to_bit(img):
 
 
 # 选择密文图像
-def open_Grayimage():
+def open_gray_image():
     # 打开相对路径下的密文文件夹
     path = "./data/cryptograph/images/"
     image_list = os.listdir(path)
@@ -58,8 +55,11 @@ def open_Grayimage():
         elif num in range(1, len(image_list) + 1):
             cryptograph_image = Image.open(path + image_list[num - 1])
             cryptograph_image = cryptograph_image.convert("L")
+            # 判断图片是否需要格式化
+            if cryptograph_image.size[0] / cryptograph_image.size[1] != 1:
+                cryptograph_image = cryptograph_image.resize(size=(120, 120))
             # 将RGB图片进行logistic加密
-            cryptograph_image = logistic_Gray_img(cryptograph_image)
+            cryptograph_image = logistic_gray_img(cryptograph_image)
             # cryptograph_image.show()
             # cryptograph_image.show()
             cryptograph_array = image_to_bit(np.array(cryptograph_image))

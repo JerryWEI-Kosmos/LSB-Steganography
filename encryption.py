@@ -1,5 +1,7 @@
 from random import randint
 
+import numpy as np
+
 
 # 密钥生成算法
 def creat_key(carrier, cryptograph, flag):
@@ -10,9 +12,10 @@ def creat_key(carrier, cryptograph, flag):
     # 获取密文的隐写大小
     size = max_h * max_w
     # 判断是否超出隐写范围
-    if size > max_w * max_h:
+    if size > max_w * max_h or max_w < w or max_h < h:
         print("超出最大隐写容量！请重新选择载体图像或更改密文大小")
-        return -1
+        print("程序退出...")
+        exit()
     # 获取隐写的起点范围
     max_x = max_w - w
     max_y = max_h - h
@@ -50,6 +53,7 @@ def creat_key(carrier, cryptograph, flag):
 
 # LSB隐写
 def steganography(carrier, cryptograph, keys):
+    c_carrier = np.copy(carrier)
     if keys[2] == -1:
         x = keys[0]
         y = keys[1]
@@ -58,10 +62,10 @@ def steganography(carrier, cryptograph, keys):
                 for j in range(keys[4]):
                     # carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
                     #     cryptograph[i][j][c])
-                    if carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
+                    if c_carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
                         continue
                     else:
-                        carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
+                        c_carrier[i + y][j + x][c] = (c_carrier[i + y][j + x][c] - (c_carrier[i + y][j + x][c] % 2)) + int(
                             cryptograph[i][j][c])
     else:
         x = keys[0]
@@ -70,14 +74,14 @@ def steganography(carrier, cryptograph, keys):
         if keys[5] == 1 or keys[5] == 4:
             for i in range(keys[3]):
                 for j in range(keys[4]):
-                    result = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(cryptograph[i][j])
-                    carrier[i + y][j + x][c] = result
+                    result = (c_carrier[i + y][j + x][c] - (c_carrier[i + y][j + x][c] % 2)) + int(cryptograph[i][j])
+                    c_carrier[i + y][j + x][c] = result
         elif keys[5] == 3:
             for i in range(keys[3]):
                 for j in range(keys[4]):
-                    if carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
+                    if c_carrier[i + y][j + x][c] % 2 == cryptograph[i][j][c]:
                         continue
                     else:
-                        carrier[i + y][j + x][c] = (carrier[i + y][j + x][c] - (carrier[i + y][j + x][c] % 2)) + int(
+                        c_carrier[i + y][j + x][c] = (c_carrier[i + y][j + x][c] - (c_carrier[i + y][j + x][c] % 2)) + int(
                             cryptograph[i][j][c])
-    return carrier
+    return c_carrier

@@ -2,10 +2,10 @@ import numpy as np
 
 
 # 椒盐噪声
-def add_salt_pepper(img, SNR):
+def add_salt_pepper(img, snr):
     img_ = img.copy()
     c, h, w = img_.shape
-    mask = np.random.choice((0, 1, 2), size=(1, h, w), p=[SNR, (1 - SNR) / 2., (1 - SNR) / 2.])
+    mask = np.random.choice((0, 1, 2), size=(1, h, w), p=[snr, (1 - snr) / 2., (1 - snr) / 2.])
     mask = np.repeat(mask, c, axis=0)  # 按channel 复制到 与img具有相同的shape
     img_[mask == 1] = 255  # 盐噪声
     img_[mask == 2] = 0  # 椒噪声
@@ -13,7 +13,7 @@ def add_salt_pepper(img, SNR):
 
 
 # 高斯噪声
-def gasuss_noise(image, mu=0.0, sigma=0.1):
+def gaseous_noise(image, mu=0.0, sigma=0.1):
     """
      添加高斯噪声
     :param image: 输入的图像
@@ -21,7 +21,7 @@ def gasuss_noise(image, mu=0.0, sigma=0.1):
     :param sigma: 标准差
     :return: 含有高斯噪声的图像
     """
-    image = np.array(image,dtype="float")
+    image = np.array(image, dtype="float")
     noise = np.random.normal(mu, sigma, image.shape)
     gauss_noise = image + noise
     if gauss_noise.min() < 0:

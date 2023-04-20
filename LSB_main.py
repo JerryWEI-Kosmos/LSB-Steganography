@@ -22,11 +22,15 @@ def open_carrier():
         width = Image.open(path + carrier_list[i]).width
         height = Image.open(path + carrier_list[i]).height
         print(str(i + 1) + "." + carrier_list[i] + " " + str(width) + "*" + str(height))
+    print("0.退出程序")
     while 1 == 1:
         image_number = int(input("请选择密文载体图像(输入序号)："))
-        if image_number == 0:
+        if image_number == 0 or len(str(image_number)) == 0:
             print("未选择载体信息！退出隐写")
             exit()
+        elif image_number > len(carrier_list):
+            print("输入编号超出范围！")
+            continue
         # 判断输入是否合法
         elif image_number in range(1, len(carrier_list) + 1):
             # 打开选中的图像
@@ -37,8 +41,6 @@ def open_carrier():
             h, w, c = carrier_array.shape
             print("选择图像为:{} {}*{} {}通道\n".format(carrier_list[image_number - 1], h, w, c))
             return carrier_array
-        else:
-            print("输入编号超出范围！")
 
 
 # 性能计算
@@ -136,10 +138,10 @@ if __name__ == '__main__':
     print("选择测试模式")
     while 1 == 1:
         print("1.正常隐写与提取\n2.模拟攻击\n0.退出程序")
-        num = int(input("选择测试模式："))
-        if num > 2:
+        num = input("选择测试模式：")
+        if int(num) > 2:
             print("选择超出范围！请重新选择")
-        elif num == 0:
+        elif int(num) == 0:
             print("退出程序...")
             exit()
         break

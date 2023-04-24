@@ -206,16 +206,13 @@ def kafang(image):
     g_chi_square = chi_square(g_hist, g_expected)
     r_chi_square = chi_square(r_hist, r_expected)
 
-    print("R通道卡方值：", r_chi_square)
-    print("G通道卡方值：", g_chi_square)
-    print("B通道卡方值：", b_chi_square)
-
     result = np.mean([b_chi_square, g_chi_square, r_chi_square])
 
     return result
 
 
 if __name__ == '__main__':
+    # 可根据自己的实际情况修改待分析图片的输入方式
     img = open_c_image()
     o_img = open_o_image()
     print("请选择隐写分析方法\n1.位平面分解\n2.卡方隐写分析\n3.RS隐写分析\n4.自动计算卡方值与RS\n0.退出程序")

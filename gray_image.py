@@ -26,7 +26,7 @@ def image_to_bit(img):
             bit_array[i][j] = int(zero_one_list[n])
             n = n + 1
     # 格式化矩阵
-    bit_array = bit_array.reshape((height,width,1))
+    bit_array = bit_array.reshape((height, width, 1))
     return bit_array
 
 
@@ -67,3 +67,18 @@ def open_gray_image():
             return cryptograph_array
         else:
             print("输入编号超出范围！")
+
+
+# 无选择打开灰度图
+def open_gary_images(path):
+    cryptograph_image = Image.open(path).resize((32, 32))
+    cryptograph_image = cryptograph_image.convert("L")
+    # 判断图片是否需要格式化
+    if cryptograph_image.size[0] / cryptograph_image.size[1] != 1:
+        cryptograph_image = cryptograph_image.resize(size=(120, 120))
+    # 将RGB图片进行logistic加密
+    cryptograph_image = logistic_gray_img(cryptograph_image)
+    # cryptograph_image.show()
+    # cryptograph_image.show()
+    cryptograph_array = image_to_bit(np.array(cryptograph_image))
+    return cryptograph_array

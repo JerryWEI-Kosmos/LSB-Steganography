@@ -1,6 +1,4 @@
 import os
-import numpy as np
-from PIL import Image
 from scramble import *
 
 
@@ -45,4 +43,17 @@ def open_binary_image():
             print("输入编号超出范围！")
 
 
-
+# 无选择打开二值图
+def open_binary_images(path):
+    # 打开选中的图像
+    cryptograph_image = Image.open(path).resize((32, 256))
+    # 将图像转换为二值矩阵
+    cryptograph_image = cryptograph_image.convert("1")
+    # # 将图片进行logistic置乱
+    # cryptograph_image = logistic_binary_img(cryptograph_image)
+    cryptograph_array = np.array(cryptograph_image)
+    # 获取当前图像的高宽信息
+    h, w = cryptograph_array.shape
+    # 将nArray格式化为高、宽、通道格式
+    cryptograph_array = np.reshape(cryptograph_array, (h, w, 1))
+    return cryptograph_array
